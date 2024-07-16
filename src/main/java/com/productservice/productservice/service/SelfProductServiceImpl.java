@@ -1,32 +1,35 @@
 package com.productservice.productservice.service;
 
-import com.productservice.productservice.dto.FakeStoreProductDtos;
+import com.productservice.productservice.dto.FakeStoreProductDto;
+import com.productservice.productservice.dto.GenericProductDto;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("selfProductServiceImpl")
 public class SelfProductServiceImpl implements ProductService{
     @Override
-    public FakeStoreProductDtos getproductById(Long id) {
+    public GenericProductDto getproductById(Long id) {
         return null;
     }
 
     @Override
-    public void getAllProducts() {
-
+    public List<GenericProductDto> getAllProducts() {
+        return null;
     }
 
     @Override
-    public void deleteProductById() {
-
+    public GenericProductDto deleteProductById(Long id) {
+        return null;
     }
 
     @Override
-    public void createProduct() {
-
+    public GenericProductDto createProduct(GenericProductDto genericProductDto) {
+        return null;
     }
 
     @Override
-    public void updateproductById() {
-
+    public GenericProductDto updateproductById(Long id, GenericProductDto genericProductDto) {
+        return null;
     }
 }

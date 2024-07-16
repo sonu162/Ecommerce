@@ -1,12 +1,15 @@
 package com.productservice.productservice.controller;
 
-import com.productservice.productservice.dto.FakeStoreProductDtos;
+import com.productservice.productservice.dto.FakeStoreProductDto;
+import com.productservice.productservice.dto.GenericProductDto;
 import com.productservice.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -38,27 +41,28 @@ public class ProductController {
 
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FakeStoreProductDtos> getproductById(@PathVariable("id") Long id){
-        //call the fake store product Service getProductById()
-
+    public ResponseEntity<GenericProductDto> getproductById(@PathVariable("id") Long id){
         return ResponseEntity.ok(productService.getproductById(id));
     }
 
-    @GetMapping("/")
-    public void getAllProducts(){
-
+    @GetMapping()
+    public ResponseEntity<List<GenericProductDto>> getAllProducts(){
+        return ResponseEntity.ok(productService.getAllProducts());
     }
+
     @DeleteMapping("/{id}")
-    public void deleteProductById(){
-
+    public ResponseEntity<GenericProductDto> deleteProductById(@PathVariable Long id){
+        return ResponseEntity.ok(productService.deleteProductById(id));
     }
 
-    public void createProduct(){
-        // Adding the comments line
+    @PostMapping()
+    public ResponseEntity<GenericProductDto> createProduct(@RequestBody GenericProductDto genericProductDto){
+        return ResponseEntity.ok(productService.createProduct(genericProductDto));
     }
 
-    public void updateproductById(){
-
+    @PutMapping("/{id}")
+    public ResponseEntity<GenericProductDto> updateproductById(@PathVariable("id") Long id, @RequestBody GenericProductDto genericProductDto){
+        return ResponseEntity.ok(productService.updateproductById(id, genericProductDto));
     }
 
 }

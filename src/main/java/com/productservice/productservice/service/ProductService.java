@@ -1,18 +1,21 @@
 package com.productservice.productservice.service;
 
-import com.productservice.productservice.dto.FakeStoreProductDtos;
+import com.productservice.productservice.dto.FakeStoreProductDto;
+import com.productservice.productservice.dto.GenericProductDto;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 @Service
 public interface ProductService {
 
 
-    FakeStoreProductDtos getproductById(Long id);
-    void getAllProducts();
-    public void deleteProductById();
-    public void createProduct();
-    public void updateproductById();
+    GenericProductDto getproductById(Long id);
+    List<GenericProductDto> getAllProducts();
+    public GenericProductDto deleteProductById(Long id);
+    public GenericProductDto createProduct(GenericProductDto genericProductDto);
+    public GenericProductDto updateproductById(Long id, GenericProductDto genericProductDto);
 }
