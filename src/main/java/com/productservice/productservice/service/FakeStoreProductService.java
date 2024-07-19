@@ -2,19 +2,20 @@ package com.productservice.productservice.service;
 
 import com.productservice.productservice.dto.FakeStoreProductDto;
 import com.productservice.productservice.dto.GenericProductDto;
+import com.productservice.productservice.exception.ProductNotFoundException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -24,28 +25,41 @@ public class FakeStoreProductService implements ProductService{
     private RestTemplateBuilder restTemplateBuilder;
     private String getProductUrl = "https://fakestoreapi.com/products";
 
-    FakeStoreProductService(RestTemplateBuilder restTemplateBuilder){
+
+    private final Map<String, String> body;
+
+    FakeStoreProductService(RestTemplateBuilder restTemplateBuilder, Map<String, String> body){
         this.restTemplateBuilder = restTemplateBuilder;
+        this.body = body;
     }
+
     @Override
-    public GenericProductDto getproductById(Long id) {
+    public GenericProductDto getproductById(Long id) throws ProductNotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> responseEntity =
                 restTemplate.getForEntity(getProductUrl + "/" + id, FakeStoreProductDto.class);
+
+        // If product not found throw your own custom exception
+        if(responseEntity.getBody() == null){
+            throw new ProductNotFoundException("Product with id "+ id + " is not Available ");
+        }
+
         //convert to generic product dto before returning
         return convertToGenericProductDto(Objects.requireNonNull(responseEntity.getBody()));
     }
 
-    @Override 
+    @Override
     public List<GenericProductDto> getAllProducts() {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        HttpEntity<Void> requestEntity = new HttpEntity<>(null);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(body, headers);
         List<FakeStoreProductDto> response = restTemplate.exchange(
                 getProductUrl,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<List<FakeStoreProductDto>>() {}
-                ).getBody();
+        ).getBody();
         assert response != null;
         return response.stream()
                 .map(this::convertToGenericProductDto)

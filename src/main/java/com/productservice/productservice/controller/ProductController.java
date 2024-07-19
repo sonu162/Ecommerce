@@ -1,10 +1,14 @@
 package com.productservice.productservice.controller;
 
+import com.productservice.productservice.dto.ExceptionDto;
 import com.productservice.productservice.dto.FakeStoreProductDto;
 import com.productservice.productservice.dto.GenericProductDto;
+import com.productservice.productservice.exception.ProductNotFoundException;
 import com.productservice.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +45,7 @@ public class ProductController {
 
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GenericProductDto> getproductById(@PathVariable("id") Long id){
+    public ResponseEntity<GenericProductDto> getproductById(@PathVariable("id") Long id) throws ProductNotFoundException {
         return ResponseEntity.ok(productService.getproductById(id));
     }
 
@@ -65,4 +69,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateproductById(id, genericProductDto));
     }
 
+//    @ExceptionHandler(ProductNotFoundException.class)
+//    private ResponseEntity<ExceptionDto> handleProductNoFoundException(ProductNotFoundException productNotFoundException){
+//        ExceptionDto exceptionDto = new ExceptionDto();
+//        exceptionDto.setMessage(productNotFoundException.getMessage());
+//        return new ResponseEntity<>(exceptionDto,HttpStatus.NOT_FOUND);
+//    }
 }
