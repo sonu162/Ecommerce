@@ -4,6 +4,7 @@ import com.productservice.productservice.dto.ExceptionDto;
 import com.productservice.productservice.dto.FakeStoreProductDto;
 import com.productservice.productservice.dto.GenericProductDto;
 import com.productservice.productservice.exception.ProductNotFoundException;
+import com.productservice.productservice.service.FakeStoreProductService;
 import com.productservice.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

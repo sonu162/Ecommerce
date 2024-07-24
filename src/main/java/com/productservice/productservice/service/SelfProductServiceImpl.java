@@ -1,21 +1,21 @@
 package com.productservice.productservice.service;
 
-import com.productservice.productservice.dto.FakeStoreProductDto;
 import com.productservice.productservice.dto.GenericProductDto;
+import com.productservice.productservice.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("selfProductServiceImpl")
+@Service
 public class SelfProductServiceImpl implements ProductService{
     @Override
-    public GenericProductDto getproductById(Long id) {
+    public GenericProductDto getproductById(Long id) throws ProductNotFoundException {
         return null;
     }
 
     @Override
     public List<GenericProductDto> getAllProducts() {
-        return null;
+        return List.of();
     }
 
     @Override
