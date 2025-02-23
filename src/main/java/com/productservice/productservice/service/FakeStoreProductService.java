@@ -4,31 +4,30 @@ import com.productservice.productservice.dto.FakeStoreProductDto;
 import com.productservice.productservice.dto.GenericProductDto;
 import com.productservice.productservice.exception.ProductNotFoundException;
 import com.productservice.productservice.thirdPartyClients.fakeStoreClient.FakeStoreClientAdaptor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("fakeStoreProductService")
-//@Primary   -> this will make FakeStoreProductService as a default impl of Product service in case we are not using the @Qualifier in controller to specifically tell about the required implementation
-public class FakeStoreProductService implements ProductService{
+// @Primary -> this will make FakeStoreProductService as a default impl of Product service in case we are not using the
+// @Qualifier in controller to specifically tell about the required implementation
+public class FakeStoreProductService implements ProductService {
 
     FakeStoreClientAdaptor fakeStoreClientAdaptor;
 
-    public FakeStoreProductService(FakeStoreClientAdaptor fakeStoreClientAdaptor){
+    public FakeStoreProductService(FakeStoreClientAdaptor fakeStoreClientAdaptor) {
         this.fakeStoreClientAdaptor = fakeStoreClientAdaptor;
     }
 
     @Override
-    public GenericProductDto getproductById(Long id) throws ProductNotFoundException {
+    public GenericProductDto getproductById(String id) throws ProductNotFoundException {
         return convertToGenericProductDto(fakeStoreClientAdaptor.getproductById(id));
     }
 
     @Override
     public List<GenericProductDto> getAllProducts() {
-        return fakeStoreClientAdaptor.getAllProducts().stream()
-                .map(this::convertToGenericProductDto)
+        return fakeStoreClientAdaptor.getAllProducts().stream().map(this::convertToGenericProductDto)
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +46,7 @@ public class FakeStoreProductService implements ProductService{
         return convertToGenericProductDto(fakeStoreClientAdaptor.updateproductById(id, genericProductDto));
     }
 
-    private GenericProductDto convertToGenericProductDto(FakeStoreProductDto fakeStoreProductDto){
+    private GenericProductDto convertToGenericProductDto(FakeStoreProductDto fakeStoreProductDto) {
         return GenericProductDto.builder()
                 .id(fakeStoreProductDto.getId())
                 .title(fakeStoreProductDto.getTitle())

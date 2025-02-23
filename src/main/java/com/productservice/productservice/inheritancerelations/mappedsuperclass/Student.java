@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "ms_student")
-public class Student extends User{
+public class Student extends User {
     private double psp;
 }

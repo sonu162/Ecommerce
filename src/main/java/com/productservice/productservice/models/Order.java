@@ -15,16 +15,11 @@ import java.util.List;
 public class Order extends BaseModel {
 
     @ManyToMany
-    @JoinTable(name = "products_orders",
-        joinColumns = @JoinColumn(name = "order_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @JoinTable(name = "products_orders", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> productList;
 
 }
 
 /*
-cardinality
-          1             M
-        order        product     => M:M
-          M              1
+ * cardinality 1 M order product => M:M M 1
  */

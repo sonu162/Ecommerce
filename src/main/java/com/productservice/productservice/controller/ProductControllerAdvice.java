@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ProductControllerAdvice {
 
-    // ToDo: From any controller class if an exception came it will come to this classs and run the method as per the mapping given on the top of it
+    // ToDo: From any controller class if an exception came it will come to this class and run the method as per the
+    // mapping given on the top of it
 
     @ExceptionHandler(ProductNotFoundException.class)
-    private ResponseEntity<ExceptionDto> handleProductNotFoundException(ProductNotFoundException productNotFoundException){
+    private ResponseEntity<ExceptionDto> handleProductNotFoundException(
+            ProductNotFoundException productNotFoundException) {
         ExceptionDto exceptionDto = new ExceptionDto();
-        exceptionDto.setMessage(productNotFoundException.getMessage());
+        exceptionDto.setMessage("");
         return new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);
     }
 }

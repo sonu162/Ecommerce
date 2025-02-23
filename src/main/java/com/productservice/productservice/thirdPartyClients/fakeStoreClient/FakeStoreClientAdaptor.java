@@ -23,34 +23,31 @@ import java.util.Objects;
 @Component
 public class FakeStoreClientAdaptor {
 
-    private RestTemplateBuilder restTemplateBuilder;
-
-    private  String specificProductUrl;
-    private  String genericProducturl;
-
     private final Map<String, String> body;
+    private final RestTemplateBuilder restTemplateBuilder;
+    private final String specificProductUrl;
+    private final String genericProducturl;
 
-    FakeStoreClientAdaptor(RestTemplateBuilder restTemplateBuilder,
-                           Map<String, String> body,
+    FakeStoreClientAdaptor(RestTemplateBuilder restTemplateBuilder, Map<String, String> body,
                            @Value("${fakestore.api.url}") String fakeStoreUrl,
-                           @Value("${fakestore.api.paths.products}") String pathForProducts){
+                           @Value("${fakestore.api.paths.products}") String pathForProducts) {
         this.restTemplateBuilder = restTemplateBuilder;
         this.body = body;
         this.specificProductUrl = fakeStoreUrl + pathForProducts + "/{id}";
         this.genericProducturl = fakeStoreUrl + pathForProducts;
     }
 
-    public FakeStoreProductDto getproductById(Long id) throws ProductNotFoundException {
+    public FakeStoreProductDto getproductById(String id) throws ProductNotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto> responseEntity =
-                restTemplate.getForEntity(specificProductUrl, FakeStoreProductDto.class, id);
+        ResponseEntity<FakeStoreProductDto> responseEntity = restTemplate.getForEntity(specificProductUrl,
+                FakeStoreProductDto.class, id);
 
         // If product not found throw your own custom exception
-        if(responseEntity.getBody() == null){
-            throw new ProductNotFoundException("Product with id "+ id + " is not Available ");
+        if (responseEntity.getBody() == null) {
+            throw new ProductNotFoundException("Product with id " + id + " is not Available ");
         }
 
-        //convert to generic product dto before returning
+        // convert to generic product dto before returning
         return Objects.requireNonNull(responseEntity.getBody());
     }
 
@@ -59,12 +56,9 @@ public class FakeStoreClientAdaptor {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(body, headers);
-        List<FakeStoreProductDto> response = restTemplate.exchange(
-                genericProducturl,
-                HttpMethod.GET,
-                requestEntity,
-                new ParameterizedTypeReference<List<FakeStoreProductDto>>() {}
-        ).getBody();
+        List<FakeStoreProductDto> response = restTemplate.exchange(genericProducturl, HttpMethod.GET, requestEntity,
+                new ParameterizedTypeReference<List<FakeStoreProductDto>>() {
+                }).getBody();
         assert response != null;
         return new ArrayList<>(response);
     }
@@ -73,25 +67,27 @@ public class FakeStoreClientAdaptor {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeStoreProductDto.class);
-        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDto.class);
-        ResponseEntity<FakeStoreProductDto> responseEntity =
-                restTemplate.execute(specificProductUrl, HttpMethod.DELETE, requestCallback, responseExtractor, id);
+        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate
+                .responseEntityExtractor(FakeStoreProductDto.class);
+        ResponseEntity<FakeStoreProductDto> responseEntity = restTemplate.execute(specificProductUrl, HttpMethod.DELETE,
+                requestCallback, responseExtractor, id);
         return responseEntity.getBody();
     }
 
     public FakeStoreProductDto createProduct(GenericProductDto genericProductDto) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto> responseEntity =
-                restTemplate.postForEntity(genericProducturl, genericProductDto, FakeStoreProductDto.class);
+        ResponseEntity<FakeStoreProductDto> responseEntity = restTemplate.postForEntity(genericProducturl,
+                genericProductDto, FakeStoreProductDto.class);
         return Objects.requireNonNull(responseEntity.getBody());
     }
 
     public FakeStoreProductDto updateproductById(Long id, GenericProductDto genericProductDto) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.httpEntityCallback(genericProductDto);
-        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDto.class);
-        ResponseEntity<FakeStoreProductDto> responseEntity =
-                restTemplate.execute(specificProductUrl, HttpMethod.PUT, requestCallback, responseExtractor, genericProductDto, id);
+        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate
+                .responseEntityExtractor(FakeStoreProductDto.class);
+        ResponseEntity<FakeStoreProductDto> responseEntity = restTemplate.execute(specificProductUrl, HttpMethod.PUT,
+                requestCallback, responseExtractor, genericProductDto, id);
         return responseEntity.getBody();
     }
 }

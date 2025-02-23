@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SelfProductServiceImpl implements ProductService{
+public class SelfProductServiceImpl implements ProductService {
     @Override
-    public GenericProductDto getproductById(Long id) throws ProductNotFoundException {
+    public GenericProductDto getproductById(String id) throws ProductNotFoundException {
         return null;
     }
 
